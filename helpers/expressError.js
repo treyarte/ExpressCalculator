@@ -2,7 +2,6 @@
  * Express error extends the error class so we can use errors in express 
  * and pass error status codes
  */
-
 class ExpressError extends Error {
     constructor(message, status){
         super();
