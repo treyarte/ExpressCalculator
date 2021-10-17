@@ -1,4 +1,5 @@
 const ExpressError = require('../helpers/expressError');
+const Calculator = require('../models/calculator');
 /**
  * Math controller class for complex calculations
  */
@@ -9,59 +10,55 @@ class mathController {
      * @param {number} numArr 
      * @returns number
      */
-    mean(numArr){
-        // Handle validation
+    async mean(req, res, next){
+    // Handle validation
+    try {
+        const {numbers} = req.body;
+        const mean = Calculator.mean(numbers);
+        return res.status(200).json({mean});
 
-        // sum reducer
-        const sum = (prev, curr) => prev + curr;
+      } catch (error) {
+        return next(error);
+      }
+      
+    }
+
+        /**
+     * Calculate the median of an array of numbers
+     * @param {number} numArr 
+     * @returns number
+     */
+         async median(req, res, next){
+          // Handle validation
+          try {
+              const {numbers} = req.body;
+              const median = Calculator.median(numbers);
+              return res.status(200).json({median});
+      
+            } catch (error) {
+              return next(error);
+            }
+            
+          }
+
+
+              /**
+     * Calculate the mode of an array of numbers
+     * @param {number} numArr 
+     * @returns number
+     */
+    async mode(req, res, next){
+      // Handle validation
+      try {
+          const {numbers} = req.body;
+          const mode = Calculator.mode(numbers);
+          return res.status(200).json({mode});
+  
+        } catch (error) {
+          return next(error);
+        }
         
-        const length = numArr.length;
-
-        // calc the sum of the array and divide it by it length
-        return numArr.reduce(sum)/length
-    }
-
-    median(numArr) {
-        // Handle Validation
-
-        //Sort the original array
-        numArr.sort();
-
-        const mid = Math.floor((numArr.length - 1) /2);
-
-        // Checking if the number array is even or odd
-        const isEven = numArr.length % 2 === 0;
-
-        // calculating the median
-        return isEven ? (numArr[mid - 1] + numArr[mid]) / 2 : numArr[mid];
-
-    }
-
-    mode(numArr) {
-        let occurrences = {};
-        let mostOccurred = null;
-        let maxNum = 0;
-      
-        for (let val of numArr) {
-          if (!occurrences[val]) {
-            occurrences[val] = 1;
-          } else {
-            occurrences[val] += 1;
-          }
-        }
-      
-        for (const [k, v] of Object.entries(occurrences)) {
-          if (v > maxNum) {
-            maxNum = v;
-            mostOccurred = k;
-          }
-        }
-      
-        let mode = Number(mostOccurred);
-      
-        return Number(mode);
-    }
-
+      }
 }
 
 module.exports = new mathController();

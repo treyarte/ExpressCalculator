@@ -1,14 +1,20 @@
 const express = require('express');
-const ExpressError = require('./helpers/expressError');
 const app = express();
+const ExpressError = require('./helpers/expressError');
 
 //Routes
-const mathRoutes = require('./routes/math');
+const mathRoutes = require('./routes/mathRoutes');
 
-app.use(express.json);
+app.use(express.json());
 
-//middleware
+app.use(express.urlencoded({extended: false}));
+
 app.use('/math', mathRoutes);
+
+app.get('/', function (req, res) {
+    res.send("Ashish")
+})
+
 
 /**
  * 404 Error Handler. Express go through all the routes and if it
@@ -17,7 +23,7 @@ app.use('/math', mathRoutes);
 app.use((req, res, next) => {
     // Creating a new error and passing in the 404 status code
     const error = new ExpressError('Not Found', 404);
-
+    console.log("HI");
     // Passing the error to thee general error handler. when passing and error to next
     // express thinks its an error
     return next(error);
@@ -39,4 +45,5 @@ app.use((err, req, res, next) => {
     });
 });
 
-module.export = app;
+
+module.exports = app;
